@@ -123,17 +123,14 @@ bool checkBST(Node* root){
 
 int CountBST(int n,int X[])
 {
-
-	if (n==1||n==0)
-	return 1;
-	int Possible = 0;
-    for (int i=1; i<=n; i++)
-	{
-		X[i-1]=CountBST(i-1, X);
-		X[n-i]=CountBST(n-i, X);
-		Possible += X[i-1]*X[n-i];
-	}
-	return Possible;
+    if (n==1||n==0) return 1;
+    int Possible = 0;
+    for (int i=1; i<=n; i++){
+        X[i-1]=CountBST(i-1, X);
+	X[n-i]=CountBST(n-i, X);
+	Possible += X[i-1]*X[n-i];
+    }
+    return Possible;
 }
 
 bool path(int sum,Node* root){
