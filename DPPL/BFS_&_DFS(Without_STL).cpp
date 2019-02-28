@@ -1,5 +1,6 @@
 #include<iostream>
 using namespace std;
+bool chk=false;
 class Node {
     public:
     int data;
@@ -32,18 +33,29 @@ Node* pop_queue(Node* root){
 int peek_queue(Node* root){
     return root->data;
 }
-Graph* AdjMat(){
-    Graph *Grph=new Graph;
-    cout<<"Enter the number of Nodes and Edges:\n";
-    cin>>Grph->Vertex>>Grph->Edge;
-    for(int i=0;i<Grph->Vertex;i++) for(int j=0;j<Grph->Vertex;j++) Grph->Adj[i][j]=false;
-    cout<<"Enter Edges:\n";
-    int x,y;
-    for(int i=0;i<Grph->Edge;i++){
-        cin>>x>>y;
-        Grph->Adj[x][y]=true;
+int MV(Graph *Grph,int St_Root){
+    int c=1;
+    bool *visited=new bool[Grph->Vertex];
+    for(int i=0;i<Grph->Vertex;i++) visited[i]=false;
+    Node* queue_=NULL;
+    queue_=push(queue_,St_Root);
+    visited[St_Root]=true;
+    while(!isempty(queue_)){
+        int val=peek_queue(queue_);
+        queue_=pop_queue(queue_);
+        for(int i=0;i<Grph->Vertex;i++)
+            if(!visited[i]&&Grph->Adj[val][i]){
+                queue_=push(queue_,i);
+                visited[i]=true;
+                c++;
+            }
     }
-    return Grph;
+    if(c==Grph->Vertex&&!chk){
+        cout<<St_Root<<" is the Mother Vertex\n";
+        chk=true;
+        return St_Root;
+    }
+    return -1;
 }
 void BFS(Graph *Grph,int St_Root){
     bool *visited=new bool[Grph->Vertex];
@@ -75,11 +87,23 @@ bool DFS(Graph *Grph,int St_Root,bool *visited){
     return visited;
 }
 int main(){
-    Graph *Grph=AdjMat();
-    BFS(Grph,2);
-    cout<<"\n";
+    Graph *Grph=new Graph;
+    cout<<"Enter the number of Nodes and Edges:\n";
+    cin>>Grph->Vertex>>Grph->Edge;
+    for(int i=0;i<Grph->Vertex;i++) for(int j=0;j<Grph->Vertex;j++) Grph->Adj[i][j]=false;
+    cout<<"Enter Edges:\n";
+    int x,y;
+    for(int i=0;i<Grph->Edge;i++){
+        cin>>x>>y;
+        Grph->Adj[x][y]=true;
+    }
+    int val=-1;
+    for(int i=0;i<Grph->Vertex;i++) if(MV(Grph,i)>=0) val=MV(Grph,i);
+    if(val>=0) BFS(Grph,val);
+    else BFS(Grph,0);
     bool *visited=new bool[Grph->Vertex];
     for(int i=0;i<Grph->Vertex;i++) visited[i]=false;
-    cout<<"DFS from vertex 2 is: ";
+    cout<<"\nDFS from vertex 2 is: ";
     *visited=DFS(Grph,2,visited);
 }
+
