@@ -29,29 +29,7 @@ Node* pop_queue(Node* root){
     root=root->next;
     return root;
 }
-Node* pop_stack(Node* root){
-    if(root==NULL) return NULL;
-    Node* temp=NULL;
-    Node* temp2=NULL;
-    temp=root;
-    if(temp->next==NULL){
-        root=NULL;
-        return root;
-    }
-    int i=0;
-    while(temp->next!=NULL){
-        temp2=temp;
-        temp=temp->next;
-        i++;
-    }
-    temp2->next=NULL;
-    return root;
-}
 int peek_queue(Node* root){
-    return root->data;
-}
-int peek_stack(Node* root){
-    while(root->next!=NULL) root=root->next;
     return root->data;
 }
 Graph* AdjMat(){
