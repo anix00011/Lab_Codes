@@ -1,6 +1,7 @@
 #include<iostream>
 using namespace std;
 bool chk=false;
+bool *visited=new bool[1000];
 class Node {
     public:
     int data;
@@ -9,7 +10,7 @@ class Node {
 class Graph{
     public:
     int Vertex,Edge;
-    bool Adj[6][6];
+    bool Adj[100][100];
 };
 Node* newNode(int data){
     Node *tmp=new Node;
@@ -58,7 +59,6 @@ int MV(Graph *Grph,int St_Root){
     return -1;
 }
 void BFS(Graph *Grph,int St_Root){
-    bool *visited=new bool[Grph->Vertex];
     for(int i=0;i<Grph->Vertex;i++) visited[i]=false;
     Node* queue_=NULL;
     queue_=push(queue_,St_Root);
@@ -75,16 +75,22 @@ void BFS(Graph *Grph,int St_Root){
             }
     }
 }
-bool DFS(Graph *Grph,int St_Root,bool *visited){
+void DFS(Graph *Grph,int St_Root){
     if(!visited[St_Root]){
         cout<<St_Root<<" ";
         visited[St_Root]=true;
     }
     for(int i=0;i<Grph->Vertex;i++)
         if(!visited[i]&&Grph->Adj[St_Root][i]){
-            *visited=DFS(Grph,i,visited);
+            DFS(Grph,i);
         }
-    return visited;
+}
+void Left_Node(bool *visited,Graph *Grph){
+    for(int i=0;i<Grph->Vertex;i++)
+        if(!visited[i]){
+            cout<<i<<" ";
+            visited[i]=true;
+        }
 }
 int main(){
     Graph *Grph=new Graph;
@@ -97,13 +103,18 @@ int main(){
         cin>>x>>y;
         Grph->Adj[x][y]=true;
     }
+    for(int i=0;i<Grph->Vertex;i++) visited[i]=false;
     int val=-1;
     for(int i=0;i<Grph->Vertex;i++) if(MV(Grph,i)>=0) val=MV(Grph,i);
     if(val>=0) BFS(Grph,val);
-    else BFS(Grph,0);
-    bool *visited=new bool[Grph->Vertex];
+    else{
+        val=0;
+        BFS(Grph,val);
+    }
+    Left_Node(visited,Grph);
     for(int i=0;i<Grph->Vertex;i++) visited[i]=false;
-    cout<<"\nDFS from vertex 2 is: ";
-    *visited=DFS(Grph,2,visited);
+    cout<<"\nDFS from vertex "<<val<<" is: ";
+    DFS(Grph,2);
+    Left_Node(visited,Grph);
 }
 
